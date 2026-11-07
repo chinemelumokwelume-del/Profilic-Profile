@@ -1,0 +1,71 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TopicWise</title>
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+</head>
+<body class="bg-slate-100 min-h-screen flex items-center justify-center">
+    <div class="bg-white p-8 rounded-2xl shadow-lg w-full max-w-md">
+        <h1 class="text-4xl font-bold text-center mb-2">TopicWise</h1>
+        <p class="text-center text-gray-500 mb-6">Welcome to TopicWise!</p>
+
+            {% if error %}
+                <p class="text-red-500 text-sm mb-4">{{ error }}</p>
+            {% endif %}
+<!-- login -->
+            <form method="POST" action="{% url 'main_enter' %}">
+                {% csrf_token %}
+                <div class="mb-4">
+                    <label for="login-username" class="block text-sm font-medium mb-2">Username</label>
+                    <input type="text" id="login-username" name="username" class="w-full border border-gray-300 rounded-lg p-3" placeholder="Enter username" required>
+                </div>
+
+                <div class="mb-6">
+                    <label for="login-password" class="block text-sm font-medium mb-2">Password</label>
+                    <input type="password" id="login-password" name="password" class="w-full border border-gray-300 rounded-lg p-3" placeholder="Enter password" required>
+                </div>
+
+                <button type="submit" class="w-full bg-black text-white py-3 rounded-lg font-semibold">Login</button>
+            </form>
+        </div>
+<!-- signup -->
+        <div class="bg-white p-8 rounded-2xl shadow-lg">
+            <h2 class="text-3xl font-bold text-center mb-2">New user?</h2>
+            <p class="text-center text-gray-500 mb-6">Create a free account</p>
+
+            {% if signup_error %}
+                <div class="text-red-500 text-sm mb-4">
+                    {% for field, messages in signup_error.items %}
+                        {% for message in messages %}
+                            <p>{{ message }}</p>
+                        {% endfor %}
+                    {% endfor %}
+                </div>
+            {% endif %}
+
+            <form method="POST" action="{% url 'signup' %}">
+                {% csrf_token %}
+                <div class="mb-4">
+                    <label for="signup-username" class="block text-sm font-medium mb-2">Username</label>
+                    <input type="text" id="signup-username" name="username" class="w-full border border-gray-300 rounded-lg p-3" placeholder="Choose a username" required>
+                </div>
+
+                <div class="mb-4">
+                    <label for="signup-password1" class="block text-sm font-medium mb-2">Password</label>
+                    <input type="password" id="signup-password1" name="password1" class="w-full border border-gray-300 rounded-lg p-3" placeholder="Create password" required>
+                </div>
+
+                <div class="mb-6">
+                    <label for="signup-password2" class="block text-sm font-medium mb-2">Confirm password</label>
+                    <input type="password" id="signup-password2" name="password2" class="w-full border border-gray-300 rounded-lg p-3" placeholder="Confirm password" required>
+                </div>
+
+                <button type="submit" class="w-full bg-slate-900 text-white py-3 rounded-lg font-semibold">Sign up</button>
+            </form>
+        </div>
+    </div>
+</body>
+</html>

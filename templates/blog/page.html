@@ -1,0 +1,98 @@
+{% extends "shared/layout.html" %}
+{% load static %}
+
+{% block content %}
+<div class="max-w-10xl mx-auto px-4 py-8 bg-gray-300 rounded shadow-blue-600-sm border border-gray-400">
+
+    <div class="flex-row mb-8 md:flex gap-4 items-center justify-between">
+        <h1 class="text-3xl font-bold mb-2 p-10 bg-slate-900 text-white rounded-2xl">A Prolific Profile</h1>
+        <form method="get" action="{% url 'blog_page' %}" class="max-w-80 ">
+            <input
+                type="text"
+                name="q"
+                value="{{ search_query }}"
+                placeholder="Search content..."
+                class="w-full border border-gray-600 rounded-full px-4 py-3"
+            >
+        </form>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-[1.3fr_0.7fr] gap-6 mb-8">
+        <div class="bg-gradient-to-r from-slate-900 to-slate-700 text-white rounded-3xl p-6 min-h-[220px]">
+            <p class="text-xl uppercase tracking-widest text-slate-300">Home</p>
+            <h2 class="text-3xl font-bold mt-4">{{ welcome_message }}</h2>
+            <p class="mt-4 text-slate-200">
+                See what people are talking about, save your favorite quote, and jump into the latest posts.
+            </p>
+
+            <form method="post" action="{% url 'blog_page' %}" class="mt-5 w-full md:w-80">
+                {% csrf_token %}
+                <label for="saved_quote" class="block text-sm text-slate-200 mb-2">Your quota</label>
+                <textarea
+                    id="saved_quote"
+                    name="saved_quote"
+                    rows="3"
+                    class="w-full rounded-xl border border-slate-300 p-3 text-white bg-slate-800 focus:outline-none focus:ring-2 focus:ring-slate-500"
+                    placeholder="Type your quote..."
+                >{{ saved_quote }}</textarea>
+                    <button type="submit" class="mt-3 bg-white text-slate-900 font-semibold px-4 py-2 rounded-full">
+                        Save quote
+                    </button>
+            </form>
+        </div>
+
+        <div class="bg-white rounded-3xl p-6 border border-gray-200">
+            <p class="text-sm uppercase tracking-widest text-gray-500">Quick note</p>
+            <h3 class="text-2xl font-bold mt-3">New Looks</h3>
+            <p class="mt-3 text-gray-600">
+                Fresh updates, trending stories, and ideas worth sharing.
+            </p>
+            <p class="text-sm text-gray-500">
+                [Still in Development]
+            </p>
+        </div>
+    </div>
+
+    <div class="mb-6">
+        <h2 class="text-3xl font-bold">Latest posts</h2>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+        {% for post in posts %}
+            <article class="bg-white rounded-3xl shadow-sm border border-gray-200 overflow-hidden">
+                {% if post.img %}
+                    <img src="{{ post.img.url }}" alt="{{ post.title }}" class="h-48 w-full object-cover">
+                {% else %}
+                    <div class="h-48 w-full bg-gradient-to-br from-slate-200 to-slate-300 flex items-center justify-center text-gray-500">
+                        No image uploaded
+                    </div>
+                {% endif %}
+
+                <div class="p-5">
+                    <p class="text-xs uppercase tracking-widest text-gray-500">
+                        {{ post.created_at|date:"M d, Y" }}
+                    </p>
+
+                    <h3 class="text-xl font-bold mt-2">{{ post.title }}</h3>
+
+                    <p class="mt-3 text-gray-600">
+                        {{ post.content|truncatechars:140 }}
+                    </p>
+
+                    <p class="text-sm text-gray-500 mt-2">
+                        Posted by: {{ post.author.username|default:"Unknown user" }}
+                    </p>
+
+                    <a href="{% url 'blog_postdetail' post.id %}" class="inline-block mt-4 text-sm font-semibold text-black">
+                        Read more
+                    </a>
+                </div>
+            </article>
+        {% empty %}
+            <div class="col-span-full bg-white border border-dashed border-gray-300 rounded-2xl p-8 text-center text-gray-500">
+                No posts yet.
+            </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}
